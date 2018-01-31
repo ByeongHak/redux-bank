@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import bankStore from './bankStore';
 import constants from './constants';
 import PropTypes from 'proptypes';
+import bankActionCreators from './bankActionCreators';
 
 // 순스 컴포넌트
 class BankApp extends Component {
@@ -44,12 +45,6 @@ BankApp.propTypes = { // 부모컨테이너로 부터 3개의 속성을 전달 �
  * 2) 속성으로 발송 
  */
 class BankAppContainer extends Component {
-  constructor(...args) {
-    super(...args);
-    bankStore.dispatch({type:constants.CREATE_ACCOUNT})
-    this.state = {balance: bankStore.getState().balance}
-  }
-
   componentDidMount() {
     this.unsubscribe = bankStore.subscribe(() => this.setState({balance: bankStore.getState().balance}));
   }
@@ -62,8 +57,8 @@ class BankAppContainer extends Component {
    return(
     <BankApp
       balance={ bankStore.getState().balance }
-      onDeposit={ (amount)=>bankStore.dispatch( {type:constants.DEPOSIT_INTO_ACCOUNT, amount:amount} )}
-      onWithdraw={ (amount)=>bankStore.dispatch( {type:constants.WITHDRAW_FROM_ACCOUNT, amount:amount} )}
+      onDeposit={ (amount)=>bankStore.dispatch(bankActionCreators.depositIntoAccount(amount))}
+      onWithdraw={ (amount)=>bankStore.dispatch(bankActionCreators.withdrawFromAccount(amount))}
     />
     )
   }
