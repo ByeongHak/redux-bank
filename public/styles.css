@@ -5,7 +5,6 @@ body {
   color: #fff;
   text-align: center;
 }
-
 header {
   width:100%;
   padding: 15px;
@@ -18,21 +17,42 @@ h1{
   font-size: 30px;
 }
 
+p{
+  margin: 0;
+}
+
 .atm {
-  width: 300px;
+  width: 320px;
   height: 115px;
   border-radius: 10px;
   background-color: #1D4F27;
   margin: 10px auto 0 auto;
   padding: 20px;
 }
-
 .atm input {
   font-size:25px;
   width: 272px
 }
-
 .atm button {
   margin: 20px 10px;
   padding: 20px 40px;
+}
+
+.info {
+  width: 350px;
+  padding: 5px;
+  border-radius: 10px;
+  background-color: #1D4F27;
+  margin: 25px auto 0 auto;
+}
+
+.info--visible {
+  margin-top: 10px;
+  height: 40px;
+  padding: 10px;
+}
+
+.info--closed {
+  height: 0px;
+  overflow: hidden;
 }

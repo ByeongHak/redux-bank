@@ -17,6 +17,12 @@ const bankActionCreators = {
       type: constants.WITHDRAW_FROM_ACCOUNT,
       amount: amount
     };
+  },
+
+  toggleExchange(){
+    return {
+      type: constants.TOGGLE_EXCHANGE
+    };
   }
 };
 export default bankActionCreators;

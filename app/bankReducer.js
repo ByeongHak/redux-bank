@@ -1,17 +1,34 @@
 import constants from './constants';
+import {combineReducers} from 'redux';
+import update from 'react-addons-update';
 
 const initialState = {
-  balance: 0
+  initialalance: 0,
+  initialUI: {
+    showExchange: true,
+  }
 }
-const bankReducer = (state = initialState, action) => {
-  console.log(action); //일시적으로 사용, 모든 액션에 대한 로그
+
+const balanceReducer = (state = initialState.initialalance, action) => {
   switch (action.type) {
     case constants.DEPOSIT_INTO_ACCOUNT:
-      return {balance: state.balance + parseFloat(action.amount)}; // 전달된 금액을 더하거나
+      return state + parseFloat(action.amount);
     case constants.WITHDRAW_FROM_ACCOUNT:
-      return {balance: state.balance - parseFloat(action.amount)}; // 전달된 금액을 뺍니다.
+      return state + parseFloat(action.amount); 
     default:
       return state;
   }
 }
+
+const uiReducer  = (state = initialState.initialUI, action) => {
+  switch(action.type){
+    case constants.TOGGLE_EXCHANGE:
+      return update(state,  { showExchange: { $apply: currentState => !currentState}});
+    default:
+      return state;
+  }
+}
+
+
+const bankReducer = combineReducers({balance: balanceReducer, ui: uiReducer});
 export default bankReducer;

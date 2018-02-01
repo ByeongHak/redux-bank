@@ -21,15 +21,24 @@ class BankApp extends Component {
   render() {
     return (
       <div>
-        <header>
-         <img src="//www.pro-react.com/logos/redux-bank.svg" width="150" />Redux Bank
-        </header>
-          <h1>Your balance is ${(this.props.balance).toFixed(2)}</h1>
+        <header><img src="//www.pro-react.com/logos/redux-bank.svg" width="150" height="150" /><br/>Redux Bank</header>
+        <br />
+        <h1>Your balance is ${(this.props.balance).toFixed(2)}</h1>
         <div className="atm">
           <input type="text" placeholder="Enter Ammount" ref="amount" />
+          <br />
           <button onClick={this.handleWithdraw.bind(this)}>Withdraw</button>
           <button onClick={this.handleDeposit.bind(this)}>Deposit</button>
         </div>
+
+        <div className="info" onClick={this.props.onToggle}>
+          <strong>Additional Info:</strong>
+          <div className={this.props.showExchange? 'info--visible' : 'info--closed'}>
+            <p><strong>Your account Manager:</strong> C. F. Frost </p>
+            <p><strong>Pre approved credit limit:</strong> $500,000.00 </p>
+          </div>
+        </div>
+
       </div>
     );
   }
@@ -37,41 +46,24 @@ class BankApp extends Component {
 BankApp.propTypes = { // 부모컨테이너로 부터 3개의 속성을 전달 받음
   balance: PropTypes.number, // 저장소의 잔액
   onDeposit: PropTypes.func, // 입금(콜백)
-  onWithdraw: PropTypes.func // 출금(콜백)
+  onWithdraw: PropTypes.func, // 출금(콜백)
+  onToggle: PropTypes.func
 };
 
-
-// class BankAppContainer extends Component {
-//   componentDidMount() {
-//     this.unsubscribe = bankStore.subscribe(() => this.setState({balance: bankStore.getState().balance}));
-//   }
-
-//   componentWillUnmount() {
-//     this.unsubscribe();
-//   }
-
-//   render(){
-//    return(
-//     <BankApp
-//       balance={ bankStore.getState().balance }
-//       onDeposit={ (amount)=>bankStore.dispatch(bankActionCreators.depositIntoAccount(amount))}
-//       onWithdraw={ (amount)=>bankStore.dispatch(bankActionCreators.withdrawFromAccount(amount))}
-//     />
-//     )
-//   }
-// }
 const mapStateToProps = (state) => {
   return {
-    balance : state.balance
+    balance : state.balance,
+    showExchange: state.ui.showExchange
   }
-}
+};
 
 const mapDispatchProps = (dispatch) => {
   return {
-    onDeposit : (amount)=>bankStore.dispatch(bankActionCreators.depositIntoAccount(amount)),
-    onWithdraw : (amount)=>bankStore.dispatch(bankActionCreators.withdrawFromAccount(amount))
+    onDeposit : (amount) => dispatch(bankActionCreators.depositIntoAccount(amount)),
+    onWithdraw : (amount) => dispatch(bankActionCreators.withdrawFromAccount(amount)),
+    onToggle : ()=> dispatch(bankActionCreators.toggleExchange())
   }
-}
+};
 
 const BankAppContainer = connect(mapStateToProps, mapDispatchProps)(BankApp);
 render(
