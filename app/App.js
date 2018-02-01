@@ -4,6 +4,7 @@ import bankStore from './bankStore';
 import constants from './constants';
 import PropTypes from 'proptypes';
 import bankActionCreators from './bankActionCreators';
+import {connect, Provider } from "react-redux";
 
 // 순스 컴포넌트
 class BankApp extends Component {
@@ -40,28 +41,41 @@ BankApp.propTypes = { // 부모컨테이너로 부터 3개의 속성을 전달 �
 };
 
 
-/**
- * 1) 상태를 속성으로 매핑 : 컨테이너 컴포넌트는 저장소에서 상태 값을 가져옵니다.
- * 2) 속성으로 발송 
- */
-class BankAppContainer extends Component {
-  componentDidMount() {
-    this.unsubscribe = bankStore.subscribe(() => this.setState({balance: bankStore.getState().balance}));
-  }
+// class BankAppContainer extends Component {
+//   componentDidMount() {
+//     this.unsubscribe = bankStore.subscribe(() => this.setState({balance: bankStore.getState().balance}));
+//   }
 
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
+//   componentWillUnmount() {
+//     this.unsubscribe();
+//   }
 
-  render(){
-   return(
-    <BankApp
-      balance={ bankStore.getState().balance }
-      onDeposit={ (amount)=>bankStore.dispatch(bankActionCreators.depositIntoAccount(amount))}
-      onWithdraw={ (amount)=>bankStore.dispatch(bankActionCreators.withdrawFromAccount(amount))}
-    />
-    )
+//   render(){
+//    return(
+//     <BankApp
+//       balance={ bankStore.getState().balance }
+//       onDeposit={ (amount)=>bankStore.dispatch(bankActionCreators.depositIntoAccount(amount))}
+//       onWithdraw={ (amount)=>bankStore.dispatch(bankActionCreators.withdrawFromAccount(amount))}
+//     />
+//     )
+//   }
+// }
+const mapStateToProps = (state) => {
+  return {
+    balance : state.balance
   }
 }
-render(<BankAppContainer />, document.getElementById('root'));
 
+const mapDispatchProps = (dispatch) => {
+  return {
+    onDeposit : (amount)=>bankStore.dispatch(bankActionCreators.depositIntoAccount(amount)),
+    onWithdraw : (amount)=>bankStore.dispatch(bankActionCreators.withdrawFromAccount(amount))
+  }
+}
+
+const BankAppContainer = connect(mapStateToProps, mapDispatchProps)(BankApp);
+render(
+  <Provider store={bankStore}>
+    <BankAppContainer/>
+  </Provider>,
+  document.getElementById('root'));
